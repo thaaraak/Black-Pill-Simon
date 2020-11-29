@@ -1,9 +1,0 @@
-Bounce2.h:75:18:unsigned int Bounce::millis()	16	static
-Bounce2.h:76:10:bool Bounce::digitalRead()	16	static
-Bounce2.cpp:10:1:Bounce::Bounce()	16	static
-Bounce2.cpp:16:6:void Bounce::attach(GPIO_TypeDef*, uint16_t)	24	static
-Bounce2.cpp:31:6:void Bounce::interval(uint16_t)	16	static
-Bounce2.cpp:36:6:bool Bounce::update()	24	static
-Bounce2.cpp:104:6:bool Bounce::read()	16	static
-Bounce2.cpp:109:6:bool Bounce::rose()	16	static
-Bounce2.cpp:114:6:bool Bounce::fell()	16	static

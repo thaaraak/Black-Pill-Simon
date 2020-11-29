@@ -1,5 +1,0 @@
-SimonButton.h:22:10:void SimonButton::reset()	16	static
-SimonButton.cpp:5:1:SimonButton::SimonButton(TIM_HandleTypeDef*)	16	static
-SimonButton.cpp:11:6:void SimonButton::playTone()	48	static
-SimonButton.cpp:28:6:void SimonButton::update()	16	static
-SimonButton.cpp:34:6:void SimonButton::invoke()	16	static
