@@ -301,14 +301,6 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 
-/*
-static int tones[4][2] = {
-		{ 3, 60240 },
-		{ 6, 46082 },
-		{ 10, 36074 },
-		{ 22, 20802 }
-};
-*/
 
 void initializeButtons( SimonButton *buttons[] )
 {
@@ -339,26 +331,6 @@ void buildRandomTones()
 {
 	for ( int i = 0 ; i < TONES_LENGTH ; i++ )
 		randomTones[i] = random() % 4;
-}
-
-void setTone( int toneid )
-{
-	TIM_OC_InitTypeDef sConfigOC = {0};
-
-	int prescaler = tones[toneid][0];
-	int period = tones[toneid][1];
-
-	__HAL_TIM_SET_PRESCALER( &htim4, prescaler);
-	__HAL_TIM_SET_AUTORELOAD( &htim4, period );
-
-	sConfigOC.OCMode = TIM_OCMODE_PWM1;
-	sConfigOC.Pulse = period/2;
-	sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
-	sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
-
-	HAL_TIM_PWM_ConfigChannel(&htim4, &sConfigOC, TIM_CHANNEL_1);
-	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1);
-
 }
 
 
