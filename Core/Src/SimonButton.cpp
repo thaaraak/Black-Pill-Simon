@@ -8,9 +8,17 @@ SimonButton::SimonButton( TIM_HandleTypeDef* tim )
 	_lastValue = -1;
 }
 
+void SimonButton::stopTone()
+{
+	HAL_GPIO_WritePin( _pinBase, _pin, GPIO_PIN_RESET );
+	HAL_TIM_PWM_Stop( _tim, TIM_CHANNEL_1);
+}
+
 void SimonButton::playTone()
 {
 	TIM_OC_InitTypeDef sConfigOC = {0};
+
+	HAL_GPIO_WritePin( _pinBase, _pin, GPIO_PIN_SET );
 
 	__HAL_TIM_SET_PRESCALER( _tim, _prescaler);
 	__HAL_TIM_SET_AUTORELOAD( _tim, _period );
@@ -36,13 +44,7 @@ void SimonButton::invoke()
 	reset();
 
 	if ( _value == 0 )
-	{
-		HAL_GPIO_WritePin( _pinBase, _pin, GPIO_PIN_RESET );
-		HAL_TIM_PWM_Stop( _tim, TIM_CHANNEL_1);
-	}
+		stopTone();
 	else
-	{
-		HAL_GPIO_WritePin( _pinBase, _pin, GPIO_PIN_SET );
 		playTone();
-	}
 }

@@ -20,8 +20,10 @@ class SimonButton
 
     bool changed() { return _value != _lastValue; }
     void reset() { _lastValue = _value; }
+    int value() { return _value; }
 
     void playTone();
+    void stopTone();
 
     void update();
     void invoke();

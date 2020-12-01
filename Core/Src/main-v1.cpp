@@ -47,9 +47,20 @@ TIM_HandleTypeDef htim4;
 
 /* USER CODE BEGIN PV */
 
-#define TONES_LENGTH 36
+static int tones[4][2] = {
+		{ 3, 60240 },
+		{ 6, 46082 },
+		{ 10, 36074 },
+		{ 22, 20802 }
+};
+
+#define TONES_LENGTH 16
 int randomTones[TONES_LENGTH];
-int currentTone;
+
+Bounce	redButton;
+Bounce	blueButton;
+Bounce	greenButton;
+Bounce	yellowButton;
 
 /* USER CODE END PV */
 
@@ -67,24 +78,6 @@ void setTone( int toneid );
 void buildRandomTones();
 void initializeButtons( SimonButton* b[] );
 SimonButton* addButton( GPIO_TypeDef* pinBase, uint16_t pin,GPIO_TypeDef* ledBase, uint16_t led, int prescaler, int period );
-
-int totalButtons;
-
-typedef enum
-{
-	MODE_WAITING = 0,
-	MODE_PLAYBACK,
-	MODE_RESPONSE,
-	MODE_LOSE,
-	MODE_WIN
-} GameMode;
-
-GameMode	currentMode = MODE_WAITING;
-
-void	  processWait( SimonButton *buttons[] );
-void	  processPlayback( SimonButton *buttons[] );
-void	  processResponse( SimonButton *buttons[] );
-
 
 /* USER CODE END 0 */
 
@@ -126,7 +119,7 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
-  SimonButton	*buttons[10];
+  SimonButton	*buttons[4];
   initializeButtons( buttons );
 
 //  srandom( HAL_GetTick() );
@@ -135,14 +128,12 @@ int main(void)
   while (1)
   {
 
-	  if ( currentMode == MODE_WAITING )
-		  processWait( buttons );
-
-	  else if ( currentMode == MODE_PLAYBACK )
-		  processPlayback( buttons );
-
-	  else if ( currentMode == MODE_RESPONSE )
-		  processResponse( buttons );
+	  for ( int i = 0 ; i < 4 ; i++ )
+	  {
+		  buttons[i]->update();
+		  if ( buttons[i]->changed() )
+			  buttons[i]->invoke();
+	  }
 
     /* USER CODE END WHILE */
 
@@ -319,8 +310,6 @@ void initializeButtons( SimonButton *buttons[] )
 	buttons[i++] = addButton( GREEN_BUTTON_GPIO_Port, GREEN_BUTTON_Pin, GREEN_LED_GPIO_Port, GREEN_LED_Pin, 3, 60240 );
 	buttons[i++] = addButton( BLUE_BUTTON_GPIO_Port, BLUE_BUTTON_Pin, BLUE_LED_GPIO_Port, BLUE_LED_Pin, 22, 20802 );
 	buttons[i++] = addButton( YELLOW_BUTTON_GPIO_Port, YELLOW_BUTTON_Pin, YELLOW_LED_GPIO_Port, YELLOW_LED_Pin, 10, 36074 );
-
-	totalButtons = i;
 }
 
 SimonButton* addButton( GPIO_TypeDef* pinBase, uint16_t pin, GPIO_TypeDef* ledBase, uint16_t led, int prescaler, int period )
@@ -338,68 +327,12 @@ SimonButton* addButton( GPIO_TypeDef* pinBase, uint16_t pin, GPIO_TypeDef* ledBa
 }
 
 
-
-
-void processWait( SimonButton *buttons[] )
-{
-	for ( int i = 0 ; i < totalButtons ; i++ )
-	{
-		  buttons[i]->update();
-
-		  if ( buttons[i]->changed() )
-		  {
-			  buttons[i]->reset();
-
-			  if ( buttons[i]->value() == 1 )
-			  {
-				  currentMode = MODE_PLAYBACK;
-				  currentTone = 0;
-				  randomTones[0] = -1;
-				  return;
-			  }
-		  }
-	}
-}
-
 void buildRandomTones()
 {
-	srandom( HAL_GetTick() );
 	for ( int i = 0 ; i < TONES_LENGTH ; i++ )
-		randomTones[i] = random() % totalButtons;
+		randomTones[i] = random() % 4;
 }
 
-
-void processPlayback( SimonButton *buttons[] )
-{
-	if ( randomTones[0] == -1 )
-		buildRandomTones();
-
-	for ( int i = 0 ; i <= currentTone ; i++ )
-	{
-		buttons[randomTones[i]]->playTone();
-		HAL_Delay(50);
-		buttons[randomTones[i]]->stopTone();
-		HAL_Delay(20);
-	}
-
-	currentTone++;
-
-	if ( currentTone == TONES_LENGTH )
-		currentMode = MODE_WAITING;
-	else
-		HAL_Delay(200);
-}
-
-void processResponse( SimonButton *buttons[] )
-{
-	for ( int i = 0 ; i < totalButtons ; i++ )
-	{
-		  buttons[i]->update();
-		  if ( buttons[i]->changed() )
-			  buttons[i]->invoke();
-		  buttons[i]->reset();
-	}
-}
 
 /* USER CODE END 4 */
 
