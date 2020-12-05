@@ -8,6 +8,7 @@
 #include <inttypes.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include "Buttons.h"
 
 #define MAX_TONES	64
 
@@ -23,20 +24,19 @@ typedef enum
 class GameState
 {
  public:
-    GameState( int totalTones, int totalButtons );
+    GameState( int totalTones, Buttons* buttons );
 
     int getTotalTones() { return _totalTones; }
     void buildTones();
     int getTone( int i ) { return _tones[i]; }
 
-    GameMode getMode() { return _mode; }
-    void setMode( GameMode mode ) { _mode = mode; }
+    void process();
 
-    bool isWaiting() { return _mode == MODE_WAITING; }
-    bool isPlayback() { return _mode == MODE_PLAYBACK; }
-    bool isResponse() { return _mode == MODE_RESPONSE; }
-    bool isLose() { return _mode == MODE_LOSE; }
-    bool isWin() { return _mode == MODE_WIN; }
+    void	  processWait();
+    void	  processPlayback();
+    void	  processResponse();
+    void	  processLose();
+    void	  processWin();
 
     void initializePlayback();
     void initializeResponse();
@@ -56,10 +56,10 @@ class GameState
  protected:
 
     GameMode	_mode;
+    Buttons*	_buttons;
 
     int _tones[MAX_TONES];
     int _totalTones;
-    int _totalButtons;
     int _currentPlaybackTone;
     int _currentResponseTone;
 

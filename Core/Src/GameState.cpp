@@ -2,10 +2,103 @@
 
 #include "GameState.h"
 
-GameState::GameState( int totalTones, int totalButtons )
+GameState::GameState( int totalTones, Buttons *buttons )
 {
 	_totalTones = totalTones;
-	_totalButtons = totalButtons;
+	_buttons = buttons;
+
+	_mode = MODE_WAITING;
+}
+
+void GameState::process()
+{
+	  if ( _mode == MODE_WAITING )
+		  processWait();
+
+	  else if ( _mode == MODE_PLAYBACK )
+		  processPlayback();
+
+	  else if ( _mode == MODE_RESPONSE )
+		  processResponse();
+
+	  else if ( _mode == MODE_LOSE )
+		  processLose();
+
+	  else if ( _mode == MODE_WIN )
+		  processWin();
+}
+
+
+void GameState::processWait()
+{
+	if ( _buttons->getButtonValue(0) >= 0 )
+	{
+		initializePlayback();
+		for ( int i = 0 ; i < 4 ; i++ )
+		{
+				SimonButton *b = _buttons->getButton(i);
+				b->playTone();
+				HAL_Delay(50);
+				b->stopTone();
+				HAL_Delay(20);
+		}
+		HAL_Delay(500);
+	}
+
+}
+
+void GameState::processPlayback()
+{
+	for ( int i = 0 ; i <= getPlaybackTone() ; i++ )
+	{
+		SimonButton *b = _buttons->getButton(getTone(i));
+		b->playTone();
+		HAL_Delay(400);
+		b->stopTone();
+		HAL_Delay(80);
+	}
+
+	initializeResponse();
+}
+
+void GameState::processResponse()
+{
+	if (isOutofTime())
+	{
+		_mode = MODE_LOSE;
+		return;
+	}
+
+	int buttonPressed = _buttons->getButtonValue(0);
+
+	if ( buttonPressed >= 0 )
+		checkPlayback( buttonPressed );
+}
+
+void GameState::processLose()
+{
+	for ( int i = 0 ; i < 3 ; i++ )
+	{
+		SimonButton *b = _buttons->getButton(3);
+		b->playTone();
+		HAL_Delay(100);
+		b->stopTone();
+		HAL_Delay(80);
+	}
+
+	_mode = MODE_WAITING;
+}
+
+void GameState::processWin()
+{
+	for ( int i = 0 ; i < 8 ; i++ )
+	{
+		SimonButton *b = _buttons->getButton(0);
+		b->playTone();
+		HAL_Delay(100);
+		b->stopTone();
+		HAL_Delay(80);
+	}
 
 	_mode = MODE_WAITING;
 }
@@ -14,7 +107,7 @@ void GameState::buildTones()
 {
 	srandom( HAL_GetTick() );
 	for ( int i = 0 ; i < _totalTones ; i++ )
-		_tones[i] = random() % _totalButtons;
+		_tones[i] = random() % _buttons->getTotalButtons();
 }
 
 void GameState::initializePlayback()

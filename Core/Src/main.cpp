@@ -64,11 +64,7 @@ static void MX_TIM4_Init(void);
 
 void initializeButtons( Buttons* b );
 
-void	  processWait( GameState *state, Buttons *buttons );
-void	  processPlayback( GameState *state, Buttons *buttons );
-void	  processResponse( GameState *state, Buttons *buttons );
-void	  processLose( GameState *state, Buttons *buttons );
-void	  processWin( GameState *state, Buttons *buttons );
+
 
 
 /* USER CODE END 0 */
@@ -113,30 +109,13 @@ int main(void)
 
   Buttons buttons( &htim4 );
   initializeButtons( &buttons );
-  GameState state( 5, 4 );
-
-//  srandom( HAL_GetTick() );
-//  buildRandomTones();
+  GameState state( 3, &buttons );
 
   while (1)
   {
+	  state.process();
 
-	  if ( state.isWaiting() )
-		  processWait( &state, &buttons );
-
-	  else if ( state.isPlayback() )
-		  processPlayback( &state, &buttons );
-
-	  else if ( state.isResponse() )
-		  processResponse( &state, &buttons );
-
-	  else if ( state.isLose() )
-		  processLose( &state, &buttons );
-
-	  else if ( state.isWin() )
-		  processWin( &state, &buttons );
-
-    /* USER CODE END WHILE */
+	  /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
   }
@@ -302,7 +281,6 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 
-
 void initializeButtons( Buttons *buttons )
 {
 	buttons->addButton( BLUE_BUTTON_GPIO_Port, BLUE_BUTTON_Pin, BLUE_LED_GPIO_Port, BLUE_LED_Pin, 22, 20802 );
@@ -310,82 +288,6 @@ void initializeButtons( Buttons *buttons )
 	buttons->addButton( RED_BUTTON_GPIO_Port, RED_BUTTON_Pin, RED_LED_GPIO_Port, RED_LED_Pin, 6, 46082 );
 	buttons->addButton( GREEN_BUTTON_GPIO_Port, GREEN_BUTTON_Pin, GREEN_LED_GPIO_Port, GREEN_LED_Pin, 3, 60240 );
 }
-
-
-void processWait( GameState *state, Buttons *buttons )
-{
-	if ( buttons->getButtonValue(0) >= 0 )
-	{
-		state->initializePlayback();
-		for ( int i = 0 ; i < 4 ; i++ )
-		{
-				SimonButton *b = buttons->getButton(i);
-				b->playTone();
-				HAL_Delay(50);
-				b->stopTone();
-				HAL_Delay(20);
-		}
-		HAL_Delay(500);
-	}
-
-}
-
-void processPlayback( GameState *state, Buttons *buttons )
-{
-	for ( int i = 0 ; i <= state->getPlaybackTone() ; i++ )
-	{
-		SimonButton *b = buttons->getButton(state->getTone(i));
-		b->playTone();
-		HAL_Delay(400);
-		b->stopTone();
-		HAL_Delay(80);
-	}
-
-	state->initializeResponse();
-}
-
-void processResponse( GameState *state, Buttons *buttons )
-{
-	if (state->isOutofTime())
-	{
-		state->setMode( MODE_LOSE );
-		return;
-	}
-
-	int buttonPressed = buttons->getButtonValue(0);
-
-	if ( buttonPressed >= 0 )
-		state->checkPlayback( buttonPressed );
-}
-
-void processLose( GameState *state, Buttons *buttons )
-{
-	for ( int i = 0 ; i < 3 ; i++ )
-	{
-		SimonButton *b = buttons->getButton(3);
-		b->playTone();
-		HAL_Delay(100);
-		b->stopTone();
-		HAL_Delay(80);
-	}
-
-	state->setMode( MODE_WAITING );
-}
-
-void processWin( GameState *state, Buttons *buttons )
-{
-	for ( int i = 0 ; i < 8 ; i++ )
-	{
-		SimonButton *b = buttons->getButton(0);
-		b->playTone();
-		HAL_Delay(100);
-		b->stopTone();
-		HAL_Delay(80);
-	}
-
-	state->setMode( MODE_WAITING );
-}
-
 
 /* USER CODE END 4 */
 

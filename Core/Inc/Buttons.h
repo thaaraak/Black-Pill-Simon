@@ -18,6 +18,7 @@ class Buttons
 
     SimonButton* getButton( int i ) { return _buttons[i]; }
     int getButtonValue( int value );
+    int getTotalButtons() { return _totalButtons; }
 
  protected:
     SimonButton	*_buttons[10];
