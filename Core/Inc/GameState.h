@@ -11,6 +11,7 @@
 #include "Buttons.h"
 
 #define MAX_TONES	64
+#define MAX_RESPONSE_TIME 3000
 
 typedef enum
 {
@@ -48,7 +49,7 @@ class GameState
     void nextPlaybackTone() { _currentPlaybackTone++; }
     void nextResponseTone() { _currentResponseTone++; }
 
-    bool isOutofTime() { return ( HAL_GetTick() - _lastActionTime > 3000 ); }
+    bool isOutofTime() { return ( HAL_GetTick() - _lastActionTime > MAX_RESPONSE_TIME ); }
     void updateLastAction() { _lastActionTime = HAL_GetTick(); }
 
     void checkPlayback( int buttonPressed );

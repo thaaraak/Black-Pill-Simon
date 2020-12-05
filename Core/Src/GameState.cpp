@@ -28,6 +28,9 @@ void GameState::process()
 		  processWin();
 }
 
+// This mode simply waits for the pressing of any button to commence
+// the game. On the first button press a game start tone sequence is
+// played and then the state moves to "Playback"
 
 void GameState::processWait()
 {
@@ -47,6 +50,11 @@ void GameState::processWait()
 
 }
 
+
+// This mode plays back the randomly generated tones up to the current
+// playback tone counter. After playing the tones the state transitions
+// to "Response"
+
 void GameState::processPlayback()
 {
 	for ( int i = 0 ; i <= getPlaybackTone() ; i++ )
@@ -60,6 +68,15 @@ void GameState::processPlayback()
 
 	initializeResponse();
 }
+
+// This mode processes the user input and checks that the tone sequence
+// entered by the user is correct. If correct the current playback tone
+// counter is incremented and the state transitions to "Playback". If all the tones
+// have been entered the state transitions to Win.
+//
+// State transitions to "Lose" if either
+// 1) No button has been pushed for MAX_RESPONSE_TIME milliseconds
+// 2) The button press was incorrect
 
 void GameState::processResponse()
 {
