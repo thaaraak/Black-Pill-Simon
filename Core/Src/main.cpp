@@ -18,6 +18,7 @@
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
+#include <Button.h>
 #include "main.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -25,7 +26,6 @@
 #include <stdlib.h>
 #include "Bounce2.h"
 #include "Buttons.h"
-#include "SimonButton.h"
 #include "GameState.h"
 
 /* USER CODE END Includes */

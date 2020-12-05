@@ -7,13 +7,13 @@ Buttons::Buttons( TIM_HandleTypeDef* tim )
 	_totalButtons = 0;
 }
 
-SimonButton* Buttons::addButton( GPIO_TypeDef* pinBase, uint16_t pin, GPIO_TypeDef* ledBase, uint16_t led, int prescaler, int period )
+Button* Buttons::addButton( GPIO_TypeDef* pinBase, uint16_t pin, GPIO_TypeDef* ledBase, uint16_t led, int prescaler, int period )
 {
 	Bounce *b = new Bounce();
 	b->attach( pinBase, pin );
 	b->interval(10);
 
-	SimonButton* sb = new SimonButton( _tim );
+	Button* sb = new Button( _tim );
 	sb->attachButton( b );
 	sb->attachLed( ledBase, led );
 	sb->setTone( prescaler, period );
@@ -35,7 +35,7 @@ int Buttons::getButtonValue( int value )
 
 	for ( int i = 0 ; i < _totalButtons ; i++ )
 	{
-		SimonButton *b = _buttons[i];
+		Button *b = _buttons[i];
 
 		if ( b->update() )
 		{

@@ -36,7 +36,7 @@ void GameState::processWait()
 		initializePlayback();
 		for ( int i = 0 ; i < 4 ; i++ )
 		{
-				SimonButton *b = _buttons->getButton(i);
+				Button *b = _buttons->getButton(i);
 				b->playTone();
 				HAL_Delay(50);
 				b->stopTone();
@@ -51,7 +51,7 @@ void GameState::processPlayback()
 {
 	for ( int i = 0 ; i <= getPlaybackTone() ; i++ )
 	{
-		SimonButton *b = _buttons->getButton(getTone(i));
+		Button *b = _buttons->getButton(getTone(i));
 		b->playTone();
 		HAL_Delay(400);
 		b->stopTone();
@@ -79,7 +79,7 @@ void GameState::processLose()
 {
 	for ( int i = 0 ; i < 3 ; i++ )
 	{
-		SimonButton *b = _buttons->getButton(3);
+		Button *b = _buttons->getButton(3);
 		b->playTone();
 		HAL_Delay(100);
 		b->stopTone();
@@ -93,7 +93,7 @@ void GameState::processWin()
 {
 	for ( int i = 0 ; i < 8 ; i++ )
 	{
-		SimonButton *b = _buttons->getButton(0);
+		Button *b = _buttons->getButton(0);
 		b->playTone();
 		HAL_Delay(100);
 		b->stopTone();
