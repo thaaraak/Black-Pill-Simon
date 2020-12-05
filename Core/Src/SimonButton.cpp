@@ -5,7 +5,6 @@
 SimonButton::SimonButton( TIM_HandleTypeDef* tim )
 {
 	_tim = tim;
-	_lastValue = -1;
 }
 
 void SimonButton::stopTone()
@@ -33,17 +32,14 @@ void SimonButton::playTone()
 
 }
 
-void SimonButton::update()
+bool SimonButton::update()
 {
-	  _b->update();
-	  _value = _b->read();
+	  return _b->update();
 }
 
 void SimonButton::invoke()
 {
-	reset();
-
-	if ( _value == 0 )
+	if ( value() == 0 )
 		stopTone();
 	else
 		playTone();

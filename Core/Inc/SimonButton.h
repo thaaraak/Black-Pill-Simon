@@ -18,14 +18,12 @@ class SimonButton
     void attachLed(GPIO_TypeDef* pinBase, uint16_t pin) { _pinBase = pinBase; _pin = pin; };
     void setTone( int prescaler, int period ) { _prescaler = prescaler; _period = period; };
 
-    bool changed() { return _value != _lastValue; }
-    void reset() { _lastValue = _value; }
-    int value() { return _value; }
+    int value() { return _b->read(); }
 
     void playTone();
     void stopTone();
 
-    void update();
+    bool update();
     void invoke();
 
  protected:
@@ -38,9 +36,6 @@ class SimonButton
 
     GPIO_TypeDef* 	_pinBase;
 	uint16_t 		_pin;
-
-	int				_value;
-	int				_lastValue;
 };
 
 #endif

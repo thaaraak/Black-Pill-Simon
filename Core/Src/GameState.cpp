@@ -23,3 +23,37 @@ void GameState::initializePlayback()
 	  _currentPlaybackTone = 0;
 	  buildTones();
 }
+
+void GameState::initializeResponse()
+{
+	  _mode = MODE_RESPONSE;
+	  _currentResponseTone = 0;
+	  updateLastAction();
+}
+
+void GameState::returnToPlayback()
+{
+	if ( _currentResponseTone >= _totalTones )
+		_mode = MODE_WIN;
+	else
+	{
+		_mode = MODE_PLAYBACK;
+		_currentPlaybackTone++;
+		HAL_Delay(500);
+	}
+}
+
+void GameState::checkPlayback( int buttonPressed )
+{
+	bool correctButton = ( buttonPressed == _tones[_currentResponseTone] );
+	updateLastAction();
+
+	if ( correctButton )
+	{
+		++_currentResponseTone;
+		if ( _currentResponseTone > _currentPlaybackTone )
+				returnToPlayback();
+	}
+	else
+		_mode = MODE_LOSE;
+}

@@ -32,7 +32,7 @@
 #include "stm32f4xx_hal.h"
 
 // Uncomment the following line for "LOCK-OUT" debounce method
-//#define BOUNCE_LOCK_OUT
+#define BOUNCE_LOCK_OUT
 
 // Uncomment the following line for "BOUNCE_WITH_PROMPT_DETECTION" debounce method
 //#define BOUNCE_WITH_PROMPT_DETECTION

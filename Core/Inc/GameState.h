@@ -35,14 +35,23 @@ class GameState
     bool isWaiting() { return _mode == MODE_WAITING; }
     bool isPlayback() { return _mode == MODE_PLAYBACK; }
     bool isResponse() { return _mode == MODE_RESPONSE; }
+    bool isLose() { return _mode == MODE_LOSE; }
+    bool isWin() { return _mode == MODE_WIN; }
 
     void initializePlayback();
+    void initializeResponse();
+    void returnToPlayback();
 
     int getPlaybackTone() { return _currentPlaybackTone; }
     int getResponseTone() { return _currentResponseTone; }
 
     void nextPlaybackTone() { _currentPlaybackTone++; }
     void nextResponseTone() { _currentResponseTone++; }
+
+    bool isOutofTime() { return ( HAL_GetTick() - _lastActionTime > 3000 ); }
+    void updateLastAction() { _lastActionTime = HAL_GetTick(); }
+
+    void checkPlayback( int buttonPressed );
 
  protected:
 
@@ -53,6 +62,8 @@ class GameState
     int _totalButtons;
     int _currentPlaybackTone;
     int _currentResponseTone;
+
+    int _lastActionTime;
 };
 
 #endif
