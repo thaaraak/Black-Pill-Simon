@@ -109,6 +109,8 @@ int main(void)
 
   Buttons buttons( &htim4 );
   initializeButtons( &buttons );
+
+  // This initializes the game with a 6 tones
   GameState state( 6, &buttons );
 
   while (1)
