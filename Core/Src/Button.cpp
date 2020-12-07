@@ -7,11 +7,17 @@ Button::Button( TIM_HandleTypeDef* tim )
 	_tim = tim;
 }
 
+// This method turns the PWM signal and associated LED off
+
 void Button::stopTone()
 {
 	HAL_GPIO_WritePin( _pinBase, _pin, GPIO_PIN_RESET );
 	HAL_TIM_PWM_Stop( _tim, TIM_CHANNEL_1);
 }
+
+// This function takes the prescaler and period set up with "setTone" and
+// emits a PWM signal on TIM_CHANNEL_1. Note that that tone is turned on and off
+// from the invoke method below. This method also turns the LED on.
 
 void Button::playTone()
 {
