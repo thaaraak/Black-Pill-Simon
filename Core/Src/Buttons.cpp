@@ -11,7 +11,7 @@ Button* Buttons::addButton( GPIO_TypeDef* pinBase, uint16_t pin, GPIO_TypeDef* l
 {
 	Bounce *b = new Bounce();
 	b->attach( pinBase, pin );
-	b->interval(10);
+	b->interval(50);
 
 	Button* sb = new Button( _tim );
 	sb->attachButton( b );

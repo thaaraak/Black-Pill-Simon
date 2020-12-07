@@ -109,7 +109,7 @@ int main(void)
 
   Buttons buttons( &htim4 );
   initializeButtons( &buttons );
-  GameState state( 3, &buttons );
+  GameState state( 6, &buttons );
 
   while (1)
   {
