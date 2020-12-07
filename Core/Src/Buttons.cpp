@@ -7,6 +7,11 @@ Buttons::Buttons( TIM_HandleTypeDef* tim )
 	_totalButtons = 0;
 }
 
+// This function is called on setup and adds a Button instance to the list. The input parameters
+// contain the hardware address of both the input button and LED. The tone associated with this
+// button is also passed in the prescaler and period variables. The Button instance created
+// is added to the "_buttons" array
+
 Button* Buttons::addButton( GPIO_TypeDef* pinBase, uint16_t pin, GPIO_TypeDef* ledBase, uint16_t led, int prescaler, int period )
 {
 	Bounce *b = new Bounce();
