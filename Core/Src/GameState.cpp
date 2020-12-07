@@ -141,6 +141,10 @@ void GameState::initializeResponse()
 	  updateLastAction();
 }
 
+// All tones played in this round have been correctly answered
+// Mode transitions back to Playback and the current Playback tone index
+// is incremented
+
 void GameState::returnToPlayback()
 {
 	if ( _currentResponseTone >= _totalTones )
@@ -152,6 +156,12 @@ void GameState::returnToPlayback()
 		HAL_Delay(500);
 	}
 }
+
+// This function is called while processing the Response mode when a
+// button is pressed. It checks that the button pressed matches the currentResponseTone
+// tone index. If the correct button is pressed the currentResponseTone is
+// incremented. If an incorrect button is pressed then mode transitions
+// to "Lose"
 
 void GameState::checkPlayback( int buttonPressed )
 {
